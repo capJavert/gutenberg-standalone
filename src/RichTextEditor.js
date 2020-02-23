@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies
  */
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
 	BlockEditorKeyboardShortcuts,
 	BlockEditorProvider,
@@ -15,6 +15,7 @@ import {
 	SlotFillProvider,
 	DropZoneProvider,
 } from '@wordpress/components';
+import { getBlockTypes, unregisterBlockType } from '@wordpress/blocks'
 import { registerCoreBlocks } from '@wordpress/block-library';
 import '@wordpress/format-library';
 
@@ -22,19 +23,24 @@ import '@wordpress/format-library';
  * Internal dependencies
  */
 
-const RichTextEditor = () => {
-	const [ blocks, updateBlocks ] = useState( [] );
-
+const RichTextEditor = ({ blocks, updateBlocks, onPreview }) => {
 	useEffect( () => {
 		console.log('DEBUG: gutenberg-state', blocks)
 	}, [blocks] );
 
 	useEffect( () => {
 		registerCoreBlocks();
+
+		return () => {
+			getBlockTypes().forEach( ( block ) => {
+				unregisterBlockType( block.name );
+			} );
+		}
 	}, [] );
 
 	return (
 		<div className="playground">
+			<button onClick={onPreview}>Preview</button>
 			<SlotFillProvider>
 				<DropZoneProvider>
 					<BlockEditorProvider
