@@ -26,6 +26,7 @@ import '@wordpress/format-library';
 const RichTextEditor = ({ blocks, updateBlocks, onPreview }) => {
 	useEffect( () => {
 		console.log('DEBUG: gutenberg-state', blocks)
+		localStorage.setItem('gutenberg-state', JSON.stringify(blocks))
 	}, [blocks] );
 
 	useEffect( () => {
